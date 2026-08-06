@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  font-family: Inter, "Segoe UI", Roboto, sans-serif;
+  background-color: #f7f9fc;
+  color: #172b4d;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  background-color: #020617;
+  color: #f8fafc;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f7f9fc;
+}
+
+.dark body,
+.dark #root {
+  background: #020617;
+  color: #f8fafc;
+}
+
+.dark .bg-white,
+.dark .bg-slate-50,
+.dark .bg-slate-100,
+.dark .bg-slate-200 {
+  background-color: #0f172a !important;
+}
+
+.dark .bg-slate-900 {
+  background-color: #020617 !important;
+}
+
+.dark .text-slate-900,
+.dark .text-slate-800,
+.dark .text-slate-700,
+.dark .text-slate-600,
+.dark .text-slate-500,
+.dark .text-slate-400 {
+  color: #f8fafc !important;
+}
+
+.dark .border-slate-200,
+.dark .border-slate-100 {
+  border-color: #334155 !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(22, 43, 85, 0.25);
+  border-radius: 999px;
+}
+
+.crm-page-title { color: #172b4d; font-weight: 800; letter-spacing: -0.025em; }
+.crm-card { border: 1px solid #d9e0e7; border-radius: 9px; background: #fff; box-shadow: 0 1px 2px rgba(16, 24, 40, .03); }
+.crm-input { border: 1px solid #d5dde6; background: #f1f4f8; border-radius: 5px; color: #172b4d; }
+.crm-input:focus { border-color: #0e8e86; outline: 2px solid rgba(14, 142, 134, .12); }
+.crm-primary { background: #e86f00; color: #fff; border-radius: 6px; }
+.crm-primary:hover { background: #c85e00; }
+
+.dark .crm-page-title { color: #f8fafc; }
+.dark .crm-card { border-color: #334155; background: #0f172a; box-shadow: none; }
+.dark .crm-input { border-color: #334155; background: #111827; color: #f8fafc; }
+.dark .crm-input:focus { border-color: #2dd4bf; outline: 2px solid rgba(45, 212, 191, .15); }
+.dark .crm-alert { border-color: #334155; background: #111827; color: #e2e8f0; }
+
+
+/* ==========================================
+   Mobile-Friendly Responsive Base & Utilities
+   ================================---------- */
+
+/* Ensure proper box-sizing and prevent horizontal overflow globally */
+html, body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* Responsive Images & Media */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Improve Touch Targets for Mobile Devices (Min 44x44px standard) */
+@media (max-width: 768px) {
+  button, 
+  input, 
+  select, 
+  textarea, 
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
