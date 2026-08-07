@@ -29,25 +29,22 @@ Nexora CRM is a full-stack customer relationship management application for orga
 
 ```text
 CRM/
-├── crm-frontend/          React and Vite single-page application
-│   ├── public/            Static assets
-│   ├── src/
-│   │   ├── components/    Reusable UI and layout components
-│   │   ├── context/       Authentication, notifications, and theme state
-│   │   ├── pages/         Application screens
-│   │   └── services/      Axios API clients
-│   └── vercel.json        Vite preset and SPA fallback rewrite
-├── crm-backend/           Express and Sequelize API
-│   ├── api/index.js       Vercel serverless entry point
-│   ├── config/            Database configuration
-│   ├── controllers/       Request handlers and business logic
-│   ├── middleware/        Authentication and error handling
-│   ├── models/            User, Workspace, Lead, and Task models
-│   ├── routes/            REST API route definitions
-│   ├── utils/             Email, token, and Google Places helpers
-│   ├── app.js             Express app and route registration
-│   └── server.js          Local development server
-└── README.md
+├── apps/
+│   ├── web/               React and Vite single-page application
+│   │   ├── public/        Static assets
+│   │   ├── src/           Pages, components, contexts, and API clients
+│   │   └── vercel.json    Vite preset and SPA fallback rewrite
+│   └── api/               Express and Sequelize API
+│       ├── api/index.js   Vercel serverless entry point
+│       ├── config/        Database configuration
+│       ├── controllers/   Request handlers and business logic
+│       ├── middleware/    Authentication and error handling
+│       ├── models/        User, Workspace, Lead, and Task models
+│       ├── routes/        REST API route definitions
+│       └── utils/         Email, token, and Google Places helpers
+├── package.json           npm workspace configuration and root scripts
+├── package-lock.json      Single dependency lockfile for all workspaces
+└── README.md              Project documentation
 ```
 
 ## Prerequisites
@@ -65,11 +62,6 @@ CRM/
 ```powershell
 git clone https://github.com/crimznexus/CRM.git
 cd CRM
-
-cd crm-backend
-npm install
-
-cd ..\crm-frontend
 npm install
 ```
 
@@ -78,11 +70,10 @@ npm install
 Copy the example file:
 
 ```powershell
-cd crm-backend
-Copy-Item .env.example .env
+Copy-Item apps\api\.env.example apps\api\.env
 ```
 
-For the simplest local setup, set `DB_DIALECT=sqlite` and leave the MySQL variables empty. The database will be stored at `crm-backend/data/crm.sqlite`.
+For the simplest local setup, set `DB_DIALECT=sqlite` and leave the MySQL variables empty. The database will be stored at `apps/api/data/crm.sqlite`.
 
 Backend variables:
 
@@ -109,8 +100,7 @@ Backend variables:
 ### 3. Configure the frontend
 
 ```powershell
-cd ..\crm-frontend
-Copy-Item .env.example .env
+Copy-Item apps\web\.env.example apps\web\.env
 ```
 
 For local development, set:
@@ -128,36 +118,30 @@ Open two terminals.
 Backend:
 
 ```powershell
-cd crm-backend
-npm run dev
+npm run dev:api
 ```
 
 Frontend:
 
 ```powershell
-cd crm-frontend
-npm run dev
+npm run dev:web
 ```
 
 Open `http://localhost:5173`. The API health endpoint is available at `http://localhost:5000/api/health`.
 
 ## Available scripts
 
-### Frontend
+Run these commands from the repository root:
 
 | Command | Description |
 | --- | --- |
-| `npm run dev` | Start the Vite development server |
-| `npm run build` | Create an optimized production build in `dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run Oxlint checks |
+| `npm run dev:web` | Start the Vite development server |
+| `npm run dev:api` | Start Express with Nodemon |
+| `npm run build` | Create the optimized web production build |
+| `npm run lint` | Run frontend Oxlint checks |
+| `npm start` | Start the production Express server |
 
-### Backend
-
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start Express with Nodemon |
-| `npm start` | Start Express with Node.js |
+Commands may also be sent directly to a workspace, for example `npm run preview --workspace=@nexora/web`.
 
 ## API overview
 
@@ -187,8 +171,8 @@ The frontend and backend are independent applications and should be imported fro
 ### 1. Deploy the backend
 
 1. In Vercel, select **Add New > Project** and import this repository.
-2. Set **Root Directory** to `crm-backend`.
-3. Add the variables from `crm-backend/.env.example` in **Settings > Environment Variables**.
+2. Set **Root Directory** to `apps/api`.
+3. Add the variables from `apps/api/.env.example` in **Settings > Environment Variables**.
 4. Use a persistent MySQL-compatible database and set `DB_DIALECT=mysql`. SQLite is intentionally rejected on Vercel because serverless files are ephemeral.
 5. Deploy and verify `https://<api-project>.vercel.app/api/health` returns `{ "status": "ok" }`.
 
@@ -197,7 +181,7 @@ The serverless handler initializes the database connection once per warm functio
 ### 2. Deploy the frontend
 
 1. Import the same repository as another Vercel project.
-2. Set **Root Directory** to `crm-frontend`.
+2. Set **Root Directory** to `apps/web`.
 3. Keep the detected Vite build command (`npm run build`) and output directory (`dist`).
 4. Add this environment variable to Production, Preview, and Development:
 
