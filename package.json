@@ -15,5 +15,8 @@
   },
   "engines": {
     "node": "22.x"
+  },
+  "overrides": {
+    "lightningcss": "1.32.0"
   }
 }
