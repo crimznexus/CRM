@@ -8,7 +8,11 @@ const app = express();
 const frontendDistPath = path.resolve(__dirname, "../crm-frontend/dist");
 const frontendIndexPath = path.join(frontendDistPath, "index.html");
 
-app.use(cors());
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+  : true;
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -26,6 +30,12 @@ app.get("/api/health", (req, res) => {
 app.get("/favicon.ico", (req, res) => {
   res.status(204).end();
 });
+
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/leads", require("./routes/leadroute"));
+app.use("/api/lead-discovery", require("./routes/Leaddiscoveryroutes"));
+app.use("/api/tasks", require("./routes/taskRoutes"));
+app.use("/api/workspace", require("./routes/workspaceRoutes"));
 
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));

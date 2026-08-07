@@ -1,0 +1,14 @@
+# Dependencies and build output
+**/node_modules/
+**/dist/
+
+# Local environment and Vercel metadata
+**/.env
+**/.env.*
+!**/.env.example
+**/.vercel/
+.npm-cache/
+
+# Logs and temporary test scripts
+*.log
+**/tmp-*.js
