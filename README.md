@@ -166,34 +166,28 @@ Authorization: Bearer <jwt-token>
 
 ## Deploying to Vercel
 
-The frontend and backend are independent applications and should be imported from this repository as two Vercel projects.
+The repository root is configured as one full-stack Vercel project. The root `vercel.json` explicitly selects Vite, builds `apps/web`, publishes `apps/web/dist`, mounts the Express application at `/api`, and sends all other routes to the SPA entry point.
 
-### 1. Deploy the backend
+### Vercel project settings
 
 1. In Vercel, select **Add New > Project** and import this repository.
-2. Set **Root Directory** to `apps/api`.
-3. Add the variables from `apps/api/.env.example` in **Settings > Environment Variables**.
-4. Use a persistent MySQL-compatible database and set `DB_DIALECT=mysql`. SQLite is intentionally rejected on Vercel because serverless files are ephemeral.
-5. Deploy and verify `https://<api-project>.vercel.app/api/health` returns `{ "status": "ok" }`.
+2. Leave **Root Directory** empty so it uses the repository root.
+3. The Framework Preset should display **Vite** from the committed configuration. Do not override the build or output settings in the dashboard.
+4. Add the backend variables from `apps/api/.env.example` under **Settings > Environment Variables**.
+5. Use a persistent MySQL-compatible database and set `DB_DIALECT=mysql`. SQLite is intentionally rejected on Vercel because serverless files are ephemeral.
+6. Deploy and verify `https://<project>.vercel.app/api/health` returns `{ "status": "ok" }`.
+7. Open `https://<project>.vercel.app`; the frontend uses the same-origin `/api` endpoint automatically.
 
-The serverless handler initializes the database connection once per warm function instance and returns HTTP 503 when the database is unavailable.
+No `VITE_API_BASE_URL` is required for the combined deployment. Set it only when the frontend must call an API hosted on another domain.
 
-### 2. Deploy the frontend
+### Existing Vercel project
 
-1. Import the same repository as another Vercel project.
-2. Set **Root Directory** to `apps/web`.
-3. Keep the detected Vite build command (`npm run build`) and output directory (`dist`).
-4. Add this environment variable to Production, Preview, and Development:
+If the project was previously configured with `apps/web`, `apps/api`, or another Root Directory:
 
-```dotenv
-VITE_API_BASE_URL=https://<api-project>.vercel.app/api
-```
-
-5. Deploy the frontend.
-6. Return to the backend project and set `CORS_ORIGIN` to the deployed frontend URL. Multiple production and preview origins can be comma-separated.
-7. Redeploy the backend after changing its environment variables.
-
-The frontend `vercel.json` rewrites application URLs to `index.html`, allowing routes such as `/dashboard` and `/leads/:id` to work when opened directly.
+1. Open **Settings > Build and Deployment > Root Directory**.
+2. Clear the value so the repository root is selected.
+3. Remove any dashboard overrides for Framework Preset, Build Command, Install Command, and Output Directory.
+4. Redeploy without the previous build cache.
 
 ## Production checklist
 

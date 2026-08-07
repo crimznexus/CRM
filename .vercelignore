@@ -1,0 +1,10 @@
+.env
+.env.*
+.git
+.npm-cache
+.vscode
+**/node_modules
+**/dist
+**/data/*.sqlite*
+**/exports/*.csv
+**/tmp-*.js
