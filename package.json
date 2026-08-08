@@ -4,19 +4,28 @@
   "private": true,
   "description": "Nexora CRM npm monorepo",
   "workspaces": [
-    "apps/*"
+    "apps/web"
   ],
   "scripts": {
     "dev:web": "npm run dev --workspace=@nexora/web",
-    "dev:api": "npm run dev --workspace=@nexora/api",
+    "dev:convex": "convex dev",
     "build": "npm run build --workspace=@nexora/web",
     "lint": "npm run lint --workspace=@nexora/web",
-    "start": "npm run start --workspace=@nexora/api"
+    "typecheck": "tsc -p convex/tsconfig.json --noEmit"
   },
   "engines": {
     "node": "22.x"
   },
   "overrides": {
     "lightningcss": "1.32.0"
+  },
+  "dependencies": {
+    "@convex-dev/better-auth": "^0.12.5",
+    "better-auth": "~1.6.15",
+    "convex": "^1.43.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^5.9.3"
   }
 }

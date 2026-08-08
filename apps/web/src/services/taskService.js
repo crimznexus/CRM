@@ -1,15 +1,9 @@
-import axios from "axios";
-
-const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL || "/api" });
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+import { api } from "../../../../convex/_generated/api";
+import { convexClient } from "../lib/convex";
 
 export const taskService = {
-  list: async () => (await api.get("/tasks")).data,
-  create: async (payload) => (await api.post("/tasks", payload)).data,
-  update: async (id, payload) => (await api.put(`/tasks/${id}`, payload)).data,
-  remove: async (id) => api.delete(`/tasks/${id}`),
+  list: async () => convexClient.query(api.tasks.list),
+  create: async (payload) => convexClient.mutation(api.tasks.create, Object.fromEntries(Object.entries(payload).filter(([, value]) => value !== "" && value != null))),
+  update: async (id, payload) => convexClient.mutation(api.tasks.update, { id, changes: Object.fromEntries(Object.entries(payload).filter(([, value]) => value !== "" && value != null)) }),
+  remove: async (id) => convexClient.mutation(api.tasks.remove, { id }),
 };

@@ -1,55 +1,35 @@
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-// Attach the auth token to every request automatically
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+import { api } from "../../../../convex/_generated/api";
+import { convexClient } from "../lib/convex";
 
 export const leadService = {
-  async getLeads(params = {}) {
-    const { data } = await api.get("/leads", { params });
-    return data;
+  async getLeads() {
+    return convexClient.query(api.leads.list);
   },
 
   async getLead(id) {
-    const { data } = await api.get(`/leads/${id}`);
-    return data;
+    return convexClient.query(api.leads.get, { id });
   },
 
   async createLead(payload) {
-    const { data } = await api.post("/leads", payload);
-    return data;
+    return convexClient.mutation(api.leads.create, payload);
   },
 
   async updateLead(id, payload) {
-    const { data } = await api.put(`/leads/${id}`, payload);
-    return data;
+    return convexClient.mutation(api.leads.update, { id, changes: payload });
   },
 
   async deleteLead(id) {
-    const { data } = await api.delete(`/leads/${id}`);
-    return data;
+    return convexClient.mutation(api.leads.remove, { id });
   },
 
   async addNote(id, note) {
-    const { data } = await api.post(`/leads/${id}/notes`, { note });
-    return data;
+    return convexClient.mutation(api.leads.addNote, { id, note });
   },
-  async exportLeads(params = {}) {
-    const { data, headers } = await api.get(`/leads/export`, {
-      params,
-      responseType: "arraybuffer",
-    });
-    return { data, headers };
+  async exportLeads() {
+    const leads = await convexClient.query(api.leads.list);
+    const columns = ["businessName", "ownerName", "email", "phone", "status", "source"];
+    const csv = [columns.join(","), ...leads.map((lead) => columns.map((key) => `"${String(lead[key] ?? "").replaceAll('"', '""')}"`).join(","))].join("\n");
+    return { data: new TextEncoder().encode(csv), headers: { "content-disposition": 'attachment; filename="leads.csv"' } };
   },
 };
 

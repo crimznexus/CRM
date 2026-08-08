@@ -2,18 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "installCommand": "npm ci --include=optional",
-  "buildCommand": "npm run build",
+  "buildCommand": "npx convex deploy --cmd-url-env-var-name VITE_CONVEX_URL --cmd \"npm run build\"",
   "outputDirectory": "apps/web/dist",
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"

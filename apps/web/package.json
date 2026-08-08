@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@convex-dev/better-auth": "^0.12.5",
     "@tailwindcss/vite": "^4.3.3",
     "axios": "^1.18.1",
+    "better-auth": "~1.6.15",
+    "convex": "^1.43.0",
     "framer-motion": "^12.43.0",
     "lucide-react": "^1.27.0",
     "react": "^19.2.7",

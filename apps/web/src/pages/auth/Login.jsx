@@ -42,13 +42,11 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const { token, user } = await authService.login(form);
-      if (token) localStorage.setItem("token", token);
-      if (user) localStorage.setItem("user", JSON.stringify(user));
+      await authService.login(form);
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setServerError(
-        err?.response?.data?.message ||
+        err?.message ||
           "Couldn't log in. Check your details and try again."
       );
     } finally {

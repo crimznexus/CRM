@@ -1,31 +1,15 @@
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+import { api } from "../../../../convex/_generated/api";
+import { convexClient } from "../lib/convex";
 
 export const leadDiscoveryService = {
   async search({ query, category, location }) {
-    const { data } = await api.get("/lead-discovery/search", {
-      params: { query, category, location },
+    return convexClient.action(api.leadDiscovery.search, {
+      query: query || undefined, category: category || undefined, location: location || undefined,
     });
-    return data.results;
   },
 
   async suggest(input) {
-    const { data } = await api.get("/lead-discovery/suggest", {
-      params: { input },
-    });
-    return data.suggestions;
+    return convexClient.action(api.leadDiscovery.suggest, { input });
   },
 };
 

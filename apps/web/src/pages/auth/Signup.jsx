@@ -58,19 +58,12 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      const result = await authService.signup(payload);
-
-      if (result?.token) localStorage.setItem("token", result.token);
-      if (result?.user) localStorage.setItem("user", JSON.stringify(result.user));
-
-      navigate("/verify-email", {
-        state: { email: payload.email },
-        replace: true,
-      });
+      await authService.signup(payload);
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       console.error("Signup error:", err.response?.data || err.message || err);
       setServerError(
-        err?.response?.data?.message ||
+        err?.message ||
           "Couldn't create your account. Please try again."
       );
     } finally {
@@ -176,7 +169,7 @@ export default function Signup() {
         </form>
 
         <div className="mt-4 rounded-3xl border border-slate-200/80 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-          You will receive a verification email after creating your account.
+          Your account is secured by Convex and Better Auth.
         </div>
 
         <p className="text-center text-sm text-slate-600 mt-6">
